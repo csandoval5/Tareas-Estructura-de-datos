@@ -1,0 +1,50 @@
+//Tarea Semana 06
+//Ejercicio 2 Invertir una lista enlazada
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        // Crear una lista enlazada con 50 números aleatorios entre 1 y 999
+        LinkedList<int> miListaEnlazada = new LinkedList<int>();
+        Random random = new Random();
+
+        for (int i = 0; i < 50; i++)
+        {
+            int numeroAleatorio = random.Next(1, 1000); // Genera números entre 1 y 999
+            miListaEnlazada.AddLast(numeroAleatorio);
+        }
+
+        // Leer el rango de valores desde el teclado
+        Console.Write("Ingresa el valor mínimo del rango: ");
+        int valorMinimo = int.Parse(Console.ReadLine());
+
+        Console.Write("Ingresa el valor máximo del rango: ");
+        int valorMaximo = int.Parse(Console.ReadLine());
+
+        // Eliminar los nodos fuera del rango
+        var nodoActual = miListaEnlazada.First;
+        while (nodoActual != null)
+        {
+            if (nodoActual.Value < valorMinimo || nodoActual.Value > valorMaximo)
+            {
+                var nodoSiguiente = nodoActual.Next;
+                miListaEnlazada.Remove(nodoActual);
+                nodoActual = nodoSiguiente;
+            }
+            else
+            {
+                nodoActual = nodoActual.Next;
+            }
+        }
+
+        // Imprimir la lista resultante
+        Console.WriteLine("Lista después de eliminar nodos fuera del rango:");
+        foreach (var numero in miListaEnlazada)
+        {
+            Console.Write($"{numero} ");
+        }
+    }
+}
