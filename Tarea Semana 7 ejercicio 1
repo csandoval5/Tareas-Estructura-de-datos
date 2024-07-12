@@ -1,0 +1,41 @@
+using System;
+using System.Collections.Generic;
+
+public class Program
+{
+    public static void Main()
+    {
+        string formula = "{7+(8*5)-[(9-7)+(4+1)]}";
+        bool isBalanced = IsBalanced(formula);
+        Console.WriteLine($"La fórmula '{formula}' está balanceada: {isBalanced}");
+    }
+
+    public static bool IsBalanced(string formula)
+    {
+        Stack<char> stack = new Stack<char>();
+        
+        foreach (char c in formula)
+        {
+            if (c == '{' || c == '[' || c == '(')
+            {
+                stack.Push(c);
+            }
+            else if (c == '}' || c == ']' || c == ')')
+            {
+                if (stack.Count == 0)
+                {
+                    return false;
+                }
+
+                char top = stack.Pop();
+
+                if ((c == '}' && top != '{') || (c == ']' && top != '[') || (c == ')' && top != '('))
+                {
+                    return false;
+                }
+            }
+        }
+
+        return stack.Count == 0;
+    }
+}
