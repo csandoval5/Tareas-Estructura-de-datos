@@ -1,0 +1,24 @@
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        int numDiscos = 3; // Cambia el número de discos según tus necesidades
+        ResolverTorresHanoi(numDiscos, 'A', 'C', 'B');
+        Console.WriteLine("Problema de las Torres de Hanoi resuelto.");
+    }
+
+    static void ResolverTorresHanoi(int n, char origen, char destino, char auxiliar)
+    {
+        if (n == 1)
+        {
+            Console.WriteLine($"Mueve el disco 1 de {origen} a {destino}");
+            return;
+        }
+
+        ResolverTorresHanoi(n - 1, origen, auxiliar, destino);
+        Console.WriteLine($"Mueve el disco {n} de {origen} a {destino}");
+        ResolverTorresHanoi(n - 1, auxiliar, destino, origen);
+    }
+}
