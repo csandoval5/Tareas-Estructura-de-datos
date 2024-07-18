@@ -1,0 +1,69 @@
+using System;
+using System.Collections.Generic;
+
+namespace AsignacionAsientos
+{
+    // Clase que representa un asiento
+    public class Asiento
+    {
+        public int Numero { get; private set; }
+        public bool Ocupado { get; private set; }
+
+        public Asiento(int numero)
+        {
+            Numero = numero;
+            Ocupado = false;
+        }
+
+        public void Asignar()
+        {
+            Ocupado = true;
+        }
+    }
+
+    // Clase que representa el avión
+    public class Avion
+    {
+        private List<Asiento> asientos;
+
+        public Avion(int cantidadAsientos)
+        {
+            asientos = new List<Asiento>();
+            for (int i = 1; i <= cantidadAsientos; i++)
+            {
+                asientos.Add(new Asiento(i));
+            }
+        }
+
+        public bool AsignarAsiento()
+        {
+            foreach (var asiento in asientos)
+            {
+                if (!asiento.Ocupado)
+                {
+                    asiento.Asignar();
+                    Console.WriteLine($"Asiento {asiento.Numero} asignado.");
+                    return true;
+                }
+            }
+            Console.WriteLine("Todos los asientos están ocupados.");
+            return false;
+        }
+    }
+
+    // Clase principal para ejecutar el programa
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Avion avion = new Avion(30);
+
+            for (int i = 0; i < 35; i++) // Intentamos asignar más asientos de los disponibles
+            {
+                avion.AsignarAsiento();
+            }
+
+            Console.ReadLine();
+        }
+    }
+}
