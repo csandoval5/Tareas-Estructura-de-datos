@@ -1,0 +1,157 @@
+using System;
+
+class Nodo
+{
+    public int Valor;
+    public Nodo Izquierdo;
+    public Nodo Derecho;
+
+    public Nodo(int valor)
+    {
+        Valor = valor;
+        Izquierdo = null;
+        Derecho = null;
+    }
+}
+
+class ArbolBinario
+{
+    public Nodo Raiz;
+
+    public ArbolBinario()
+    {
+        Raiz = null;
+    }
+
+    public void Insertar(int valor)
+    {
+        Raiz = InsertarRecursivo(Raiz, valor);
+    }
+
+    private Nodo InsertarRecursivo(Nodo nodo, int valor)
+    {
+        if (nodo == null)
+        {
+            nodo = new Nodo(valor);
+            return nodo;
+        }
+
+        if (valor < nodo.Valor)
+            nodo.Izquierdo = InsertarRecursivo(nodo.Izquierdo, valor);
+        else if (valor > nodo.Valor)
+            nodo.Derecho = InsertarRecursivo(nodo.Derecho, valor);
+
+        return nodo;
+    }
+
+    public bool Buscar(int valor)
+    {
+        return BuscarRecursivo(Raiz, valor);
+    }
+
+    private bool BuscarRecursivo(Nodo nodo, int valor)
+    {
+        if (nodo == null)
+            return false;
+
+        if (nodo.Valor == valor)
+            return true;
+
+        if (valor < nodo.Valor)
+            return BuscarRecursivo(nodo.Izquierdo, valor);
+        else
+            return BuscarRecursivo(nodo.Derecho, valor);
+    }
+
+    public void RecorrerEnOrden()
+    {
+        RecorrerEnOrdenRecursivo(Raiz);
+        Console.WriteLine();
+    }
+
+    private void RecorrerEnOrdenRecursivo(Nodo nodo)
+    {
+        if (nodo != null)
+        {
+            RecorrerEnOrdenRecursivo(nodo.Izquierdo);
+            Console.Write(nodo.Valor + " ");
+            RecorrerEnOrdenRecursivo(nodo.Derecho);
+        }
+    }
+
+    public void Imprimir()
+    {
+        PrintTree(Raiz);
+    }
+
+    public void PrintTree(Nodo nodo, string indent = "", bool last = true)
+    {
+        if (nodo != null)
+        {
+            Console.Write(indent);
+            if (last)
+            {
+                Console.Write("└─");
+                indent += "  ";
+            }
+            else
+            {
+                Console.Write("├─");
+                indent += "| ";
+            }
+            Console.WriteLine(nodo.Valor);
+            PrintTree(nodo.Izquierdo, indent, false);
+            PrintTree(nodo.Derecho, indent, true);
+        }
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        ArbolBinario arbol = new ArbolBinario();
+        int opcion, valor;
+
+        do
+        {
+            Console.WriteLine("Menú de Operaciones del Árbol Binario:");
+            Console.WriteLine("1. Insertar");
+            Console.WriteLine("2. Buscar");
+            Console.WriteLine("3. Recorrer en Orden");
+            Console.WriteLine("4. Imprimir Árbol");
+            Console.WriteLine("5. Salir");
+            Console.Write("Seleccione una opción: ");
+            opcion = int.Parse(Console.ReadLine());
+
+            switch (opcion)
+            {
+                case 1:
+                    Console.Write("Ingrese un valor para insertar: ");
+                    valor = int.Parse(Console.ReadLine());
+                    arbol.Insertar(valor);
+                    break;
+                case 2:
+                    Console.Write("Ingrese un valor para buscar: ");
+                    valor = int.Parse(Console.ReadLine());
+                    bool encontrado = arbol.Buscar(valor);
+                    Console.WriteLine(encontrado ? "Valor encontrado" : "Valor no encontrado");
+                    break;
+                case 3:
+                    Console.WriteLine("Recorrido en Orden:");
+                    arbol.RecorrerEnOrden();
+                    break;
+                case 4:
+                    Console.WriteLine("Impresión del Árbol:");
+                    arbol.Imprimir();
+                    break;
+                case 5:
+                    Console.WriteLine("Saliendo...");
+                    break;
+                default:
+                    Console.WriteLine("Opción no válida");
+                    break;
+            }
+        } while (opcion != 5);
+    }
+}
