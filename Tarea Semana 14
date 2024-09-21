@@ -1,157 +1,278 @@
 using System;
 
-class Nodo
+namespace ArbolBinarioEjemploConAnimales
 {
-    public int Valor;
-    public Nodo Izquierdo;
-    public Nodo Derecho;
-
-    public Nodo(int valor)
+    class Program
     {
-        Valor = valor;
-        Izquierdo = null;
-        Derecho = null;
-    }
-}
-
-class ArbolBinario
-{
-    public Nodo Raiz;
-
-    public ArbolBinario()
-    {
-        Raiz = null;
-    }
-
-    public void Insertar(int valor)
-    {
-        Raiz = InsertarRecursivo(Raiz, valor);
-    }
-
-    private Nodo InsertarRecursivo(Nodo nodo, int valor)
-    {
-        if (nodo == null)
+        static void Main(string[] args)
         {
-            nodo = new Nodo(valor);
-            return nodo;
-        }
+            BinaryTree tree = new BinaryTree();
+            bool exit = false;
 
-        if (valor < nodo.Valor)
-            nodo.Izquierdo = InsertarRecursivo(nodo.Izquierdo, valor);
-        else if (valor > nodo.Valor)
-            nodo.Derecho = InsertarRecursivo(nodo.Derecho, valor);
+            // Insertar animales iniciales
+            tree.Insert("Perro");
+            tree.Insert("Gato");
+            tree.Insert("Elefante");
+            tree.Insert("Tigre");
+            tree.Insert("León");
+            tree.Insert("Cebra");
 
-        return nodo;
-    }
-
-    public bool Buscar(int valor)
-    {
-        return BuscarRecursivo(Raiz, valor);
-    }
-
-    private bool BuscarRecursivo(Nodo nodo, int valor)
-    {
-        if (nodo == null)
-            return false;
-
-        if (nodo.Valor == valor)
-            return true;
-
-        if (valor < nodo.Valor)
-            return BuscarRecursivo(nodo.Izquierdo, valor);
-        else
-            return BuscarRecursivo(nodo.Derecho, valor);
-    }
-
-    public void RecorrerEnOrden()
-    {
-        RecorrerEnOrdenRecursivo(Raiz);
-        Console.WriteLine();
-    }
-
-    private void RecorrerEnOrdenRecursivo(Nodo nodo)
-    {
-        if (nodo != null)
-        {
-            RecorrerEnOrdenRecursivo(nodo.Izquierdo);
-            Console.Write(nodo.Valor + " ");
-            RecorrerEnOrdenRecursivo(nodo.Derecho);
-        }
-    }
-
-    public void Imprimir()
-    {
-        PrintTree(Raiz);
-    }
-
-    public void PrintTree(Nodo nodo, string indent = "", bool last = true)
-    {
-        if (nodo != null)
-        {
-            Console.Write(indent);
-            if (last)
+            while (!exit)
             {
-                Console.Write("└─");
-                indent += "  ";
+                Console.WriteLine("\nMenú de Operaciones del Árbol Binario:");
+                Console.WriteLine("1. Insertar");
+                Console.WriteLine("2. Buscar");
+                Console.WriteLine("3. Eliminar");
+                Console.WriteLine("4. Recorrer en Orden");
+                Console.WriteLine("5. Recorrer en Preorden");
+                Console.WriteLine("6. Recorrer en Postorden");
+                Console.WriteLine("7. Imprimir Árbol");
+                Console.WriteLine("8. Calcular Altura del Árbol");
+                Console.WriteLine("9. Salir");
+                Console.Write("Seleccione una opción: ");
+                int option = int.Parse(Console.ReadLine());
+
+                switch (option)
+                {
+                    case 1:
+                        Console.Write("Ingrese el nombre del animal a insertar: ");
+                        string animal = Console.ReadLine();
+                        tree.Insert(animal);
+                        break;
+                    case 2:
+                        Console.Write("Ingrese el nombre del animal a buscar: ");
+                        animal = Console.ReadLine();
+                        bool found = tree.Search(animal);
+                        Console.WriteLine(found ? "Animal encontrado." : "Animal no encontrado.");
+                        break;
+                    case 3:
+                        Console.Write("Ingrese el nombre del animal a eliminar: ");
+                        animal = Console.ReadLine();
+                        tree.Delete(animal);
+                        break;
+                    case 4:
+                        Console.WriteLine("Recorrido en Orden:");
+                        tree.InOrderTraversal();
+                        break;
+                    case 5:
+                        Console.WriteLine("Recorrido en Preorden:");
+                        tree.PreOrderTraversal();
+                        break;
+                    case 6:
+                        Console.WriteLine("Recorrido en Postorden:");
+                        tree.PostOrderTraversal();
+                        break;
+                    case 7:
+                        Console.WriteLine("Impresión del Árbol:");
+                        tree.PrintTree();
+                        break;
+                    case 8:
+                        Console.WriteLine("Altura del Árbol:");
+                        int height = tree.CalculateHeight();
+                        Console.WriteLine("La altura del árbol es: " + height);
+                        break;
+                    case 9:
+                        exit = true;
+                        break;
+                    default:
+                        Console.WriteLine("Opción no válida.");
+                        break;
+                }
             }
+        }
+    }
+
+    public class Node
+    {
+        public string Data;
+        public Node Left;
+        public Node Right;
+
+        public Node(string data)
+        {
+            Data = data;
+            Left = null;
+            Right = null;
+        }
+    }
+
+    public class BinaryTree
+    {
+        private Node root;
+
+        public BinaryTree()
+        {
+            root = null;
+        }
+
+        public void Insert(string data)
+        {
+            root = InsertRec(root, data);
+        }
+
+        private Node InsertRec(Node root, string data)
+        {
+            if (root == null)
+            {
+                root = new Node(data);
+                return root;
+            }
+
+            if (string.Compare(data, root.Data) < 0)
+                root.Left = InsertRec(root.Left, data);
+            else if (string.Compare(data, root.Data) > 0)
+                root.Right = InsertRec(root.Right, data);
+
+            return root;
+        }
+
+        public bool Search(string data)
+        {
+            return SearchRec(root, data);
+        }
+
+        private bool SearchRec(Node root, string data)
+        {
+            if (root == null)
+                return false;
+
+            if (root.Data == data)
+                return true;
+
+            if (string.Compare(data, root.Data) < 0)
+                return SearchRec(root.Left, data);
+
+            return SearchRec(root.Right, data);
+        }
+
+        public void Delete(string data)
+        {
+            root = DeleteRec(root, data);
+        }
+
+        private Node DeleteRec(Node root, string data)
+        {
+            if (root == null)
+                return root;
+
+            if (string.Compare(data, root.Data) < 0)
+                root.Left = DeleteRec(root.Left, data);
+            else if (string.Compare(data, root.Data) > 0)
+                root.Right = DeleteRec(root.Right, data);
             else
             {
-                Console.Write("├─");
-                indent += "| ";
+                if (root.Left == null)
+                    return root.Right;
+                else if (root.Right == null)
+                    return root.Left;
+
+                root.Data = MinValue(root.Right);
+                root.Right = DeleteRec(root.Right, root.Data);
             }
-            Console.WriteLine(nodo.Valor);
-            PrintTree(nodo.Izquierdo, indent, false);
-            PrintTree(nodo.Derecho, indent, true);
+
+            return root;
         }
-    }
-}
 
-class Program
-{
-    static void Main(string[] args)
-    {
-        ArbolBinario arbol = new ArbolBinario();
-        int opcion, valor;
-
-        do
+        private string MinValue(Node root)
         {
-            Console.WriteLine("Menú de Operaciones del Árbol Binario:");
-            Console.WriteLine("1. Insertar");
-            Console.WriteLine("2. Buscar");
-            Console.WriteLine("3. Recorrer en Orden");
-            Console.WriteLine("4. Imprimir Árbol");
-            Console.WriteLine("5. Salir");
-            Console.Write("Seleccione una opción: ");
-            opcion = int.Parse(Console.ReadLine());
-
-            switch (opcion)
+            string minv = root.Data;
+            while (root.Left != null)
             {
-                case 1:
-                    Console.Write("Ingrese un valor para insertar: ");
-                    valor = int.Parse(Console.ReadLine());
-                    arbol.Insertar(valor);
-                    break;
-                case 2:
-                    Console.Write("Ingrese un valor para buscar: ");
-                    valor = int.Parse(Console.ReadLine());
-                    bool encontrado = arbol.Buscar(valor);
-                    Console.WriteLine(encontrado ? "Valor encontrado" : "Valor no encontrado");
-                    break;
-                case 3:
-                    Console.WriteLine("Recorrido en Orden:");
-                    arbol.RecorrerEnOrden();
-                    break;
-                case 4:
-                    Console.WriteLine("Impresión del Árbol:");
-                    arbol.Imprimir();
-                    break;
-                case 5:
-                    Console.WriteLine("Saliendo...");
-                    break;
-                default:
-                    Console.WriteLine("Opción no válida");
-                    break;
+                minv = root.Left.Data;
+                root = root.Left;
             }
-        } while (opcion != 5);
+            return minv;
+        }
+
+        public void InOrderTraversal()
+        {
+            InOrderRec(root);
+            Console.WriteLine();
+        }
+
+        private void InOrderRec(Node root)
+        {
+            if (root != null)
+            {
+                InOrderRec(root.Left);
+                Console.Write(root.Data + " ");
+                InOrderRec(root.Right);
+            }
+        }
+
+        public void PreOrderTraversal()
+        {
+            PreOrderRec(root);
+            Console.WriteLine();
+        }
+
+        private void PreOrderRec(Node root)
+        {
+            if (root != null)
+            {
+                Console.Write(root.Data + " ");
+                PreOrderRec(root.Left);
+                PreOrderRec(root.Right);
+            }
+        }
+
+        public void PostOrderTraversal()
+        {
+            PostOrderRec(root);
+            Console.WriteLine();
+        }
+
+        private void PostOrderRec(Node root)
+        {
+            if (root != null)
+            {
+                PostOrderRec(root.Left);
+                PostOrderRec(root.Right);
+                Console.Write(root.Data + " ");
+            }
+        }
+
+        public int CalculateHeight()
+        {
+            return CalculateHeightRec(root);
+        }
+
+        private int CalculateHeightRec(Node root)
+        {
+            if (root == null)
+                return 0;
+
+            int leftHeight = CalculateHeightRec(root.Left);
+            int rightHeight = CalculateHeightRec(root.Right);
+
+            return Math.Max(leftHeight, rightHeight) + 1;
+        }
+
+        public void PrintTree()
+        {
+            PrintTreeRec(root, "", true);
+        }
+
+        private void PrintTreeRec(Node root, string indent, bool last)
+        {
+            if (root != null)
+            {
+                Console.Write(indent);
+                if (last)
+                {
+                    Console.Write("└─");
+                    indent += "  ";
+                }
+                else
+                {
+                    Console.Write("├─");
+                    indent += "| ";
+                }
+                Console.WriteLine(root.Data);
+
+                PrintTreeRec(root.Left, indent, false);
+                PrintTreeRec(root.Right, indent, true);
+            }
+        }
     }
 }
